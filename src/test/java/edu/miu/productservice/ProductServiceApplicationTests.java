@@ -3,6 +3,8 @@ package edu.miu.productservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.productservice.dto.ProductRequest;
+import edu.miu.productservice.respository.ProductRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +38,9 @@ class ProductServiceApplicationTests {
 	@Autowired
 	private ObjectMapper objectMapper ;
 
+	@Autowired
+	ProductRepository productRepository;
+
 
 
 	@DynamicPropertySource
@@ -53,6 +58,8 @@ void shouldCreateProduct() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/products")
 			 .contentType(MediaType.APPLICATION_JSON).content(writeValueAsString))
 				.andExpect(status().isCreated());
+
+		Assertions.assertTrue(productRepository.findAll().size() ==1);
 	}
 
 	private ProductRequest getProductRequest() {
